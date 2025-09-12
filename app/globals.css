@@ -120,6 +120,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
   body {
     @apply bg-background text-foreground;
@@ -135,36 +136,52 @@
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
   }
-  
+
   body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior: none;
   }
-  
+
   /* Fix para evitar zoom em inputs no iOS */
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     font-size: 16px !important;
   }
-  
+
   /* Scrollbar customizada para mobile */
   .scrollbar-thin {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  
+
   .scrollbar-thin::-webkit-scrollbar {
-    display: none;
+    width: 6px;
   }
-  
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+
   /* Ajustes para teclado virtual no mobile */
   .mobile-keyboard-adjust {
     min-height: 100vh;
     min-height: 100dvh; /* Dynamic viewport height */
   }
-  
+
   /* Melhoria nos toques */
-  button, [role="button"] {
+  button,
+  [role="button"] {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
   }
@@ -185,7 +202,7 @@
     min-height: 44px; /* iOS recommended touch target */
     min-width: 44px;
   }
-  
+
   /* Feedback visual melhorado para touch */
   .touch-feedback:active {
     transform: scale(0.98);
@@ -198,11 +215,11 @@
   .safe-area-inset-top {
     padding-top: max(env(safe-area-inset-top), 1rem);
   }
-  
+
   .safe-area-inset-bottom {
     padding-bottom: max(env(safe-area-inset-bottom), 1rem);
   }
-  
+
   .safe-area-inset-x {
     padding-left: max(env(safe-area-inset-left), 0.75rem);
     padding-right: max(env(safe-area-inset-right), 0.75rem);
@@ -211,7 +228,9 @@
 
 /* Animation improvements for mobile */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -242,10 +261,47 @@
     height: 100vh;
     height: 100dvh;
   }
-  
+
   /* Reduce header size in landscape */
   .landscape-header {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
+}
+
+/* Melhorando o botão de toggle de tema */
+.theme-toggle {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.theme-toggle:hover::before {
+  opacity: 0.1;
+}
+
+/* Melhorando o visual das mensagens */
+.message-bubble {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.dark .message-bubble {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Melhorando o input com glow effect */
+.input-glow:focus {
+  box-shadow: 0 0 0 3px var(--ring), 0 0 20px var(--primary);
 }

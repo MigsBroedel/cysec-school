@@ -1,90 +1,83 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Shield, Send, User, Plus, Paperclip, Mic } from "lucide-react"
-import { CysecRobot } from "@/components/cysec-robot"
+
+import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
+import { CysecRobot } from "@/components/cysec-robot"
+import { useTheme } from "@/components/theme-provider"
+import "./globals.css"
 
 interface Message {
-  id: string
+  role: "user" | "assistant"
   content: string
-  sender: "user" | "bot"
-  timestamp: string
 }
 
 export default function CysecChatbot() {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputMessage, setInputMessage] = useState("")
   const [situation, setSituation] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-
+  const [loading, setLoading] = useState(false)
+  const [userScrolled, setUserScrolled] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
   const messagesContainerRef = useRef<HTMLDivElement>(null)
+  const { theme, setTheme } = useTheme()
+
+  const scrollToBottom = () => {
+    if (!userScrolled && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }
 
   useEffect(() => {
-    if (messages.length > 0 && messages[messages.length - 1].sender === "bot") {
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-      }, 100)
+    if (messages.length > 0 && !userScrolled) {
+      const timer = setTimeout(scrollToBottom, 100)
+      return () => clearTimeout(timer)
     }
-  }, [messages])
+  }, [messages, userScrolled])
+
+  const handleScroll = () => {
+    if (messagesContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = messagesContainerRef.current
+      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100
+      setUserScrolled(!isNearBottom)
+    }
+  }
 
   const sendMessage = async () => {
     if (!inputMessage.trim()) return
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputMessage,
-      sender: "user",
-      timestamp: new Date().toISOString(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
+    const newMessage: Message = { role: "user", content: inputMessage }
+    setMessages((prev) => [...prev, newMessage])
     setInputMessage("")
-    setIsLoading(true)
+    setLoading(true)
+    setUserScrolled(false)
 
     try {
-      const response = await fetch("/api/chat", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           message: inputMessage,
-          situation: situation,
+          situation,
         }),
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || "Erro na API")
+      const data = await res.json()
+      if (res.ok) {
+        const assistantMessage: Message = { role: "assistant", content: data.message }
+        setMessages((prev) => [...prev, assistantMessage])
+      } else {
+        const errorMessage: Message = { role: "assistant", content: `Erro: ${data.error}` }
+        setMessages((prev) => [...prev, errorMessage])
       }
-
-      const data = await response.json()
-
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.message,
-        sender: "bot",
-        timestamp: new Date().toISOString(),
-      }
-      setMessages((prev) => [...prev, botMessage])
-    } catch (error) {
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: `Desculpe, ocorreu um erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
-        sender: "bot",
-        timestamp: new Date().toISOString(),
-      }
+    } catch (err: any) {
+      const errorMessage: Message = { role: "assistant", content: `Erro de conexão: ${err.message}` }
       setMessages((prev) => [...prev, errorMessage])
     } finally {
-      setIsLoading(false)
-      setTimeout(() => inputRef.current?.focus(), 100)
+      setLoading(false)
     }
   }
 
@@ -95,158 +88,182 @@ export default function CysecChatbot() {
     }
   }
 
-  const newChat = () => {
-    setMessages([])
-    setSituation("")
-    setInputMessage("")
-  }
-
   return (
-    <div className="h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800 text-white flex flex-col relative overflow-hidden">
+    <div className="h-screen flex flex-col bg-background text-foreground">
       {/* Header */}
-      <header className="border-b border-slate-700/50 bg-slate-800/30 backdrop-blur-md flex-shrink-0 relative z-50">
-        <div className="w-full px-3 sm:px-4 lg:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            {/* Left side - New chat */}
-            <div className="flex items-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={newChat}
-                className="text-slate-300 hover:text-white hover:bg-slate-700/50 rounded-xl transition-all duration-200 text-xs sm:text-sm"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Nova conversa
-              </Button>
-            </div>
-
-            {/* Center - Logo */}
-            <div className="flex items-center gap-2 sm:gap-3 absolute left-1/2 transform -translate-x-1/2">
-              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400" />
-              <span className="font-bold text-lg sm:text-xl text-white">Cysec</span>
-            </div>
-
-          
+      <header className="safe-area-inset-top border-b border-border bg-card/50 backdrop-blur-sm">
+        <div className="flex items-center justify-between p-4 safe-area-inset-x">
+          <div className="flex items-center gap-3">
+            <CysecRobot size="sm" className="text-primary" />
+            <h1 className="text-xl font-semibold text-foreground">Cysec</h1>
           </div>
+
+          <div className="flex items-center gap-4">
+            {/* Toggle Theme Button */}
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="theme-toggle p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-all duration-300"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  />
+                </svg>
+              )}
+            </button>
+
+            {/* Context Input */}
+            <div className="hidden md:flex items-center gap-2 max-w-xs">
+              <input
+                type="text"
+                placeholder="Contexto situacional..."
+                value={situation}
+                onChange={(e) => setSituation(e.target.value)}
+                className="px-3 py-1.5 text-sm bg-input border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Context Input */}
+        <div className="md:hidden px-4 pb-3 safe-area-inset-x">
+          <input
+            type="text"
+            placeholder="Contexto situacional..."
+            value={situation}
+            onChange={(e) => setSituation(e.target.value)}
+            className="w-full px-3 py-2 text-sm bg-input border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground"
+          />
         </div>
       </header>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-0 relative">
-        {/* Messages Container */}
-        <div
-          ref={messagesContainerRef}
-          className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-6 lg:py-12 scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-slate-800"
-        >
-          <div className="max-w-5xl mx-auto">
-            {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center min-h-[60vh]">
-                <div className="mb-6 sm:mb-12">
-                  <div className="mb-4 sm:mb-8">
-                    <CysecRobot size="lg" animated={true} className="mx-auto" />
-                  </div>
-                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    Cysec
-                  </h1>
-                  <p className="text-slate-400 text-sm sm:text-lg lg:text-xl font-light max-w-md mx-auto px-4">
-                    Seu assistente robô de segurança cibernética
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4 sm:space-y-8">
-                {messages.map((message) => (
-                  <div key={message.id} className="flex gap-2 sm:gap-6 max-w-4xl mx-auto">
-                    <div className="flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-700/50 backdrop-blur-sm">
-                      {message.sender === "user" ? (
-                        <User className="w-3 h-3 sm:w-5 sm:h-5 text-slate-300" />
-                      ) : (
-                        <CysecRobot size="sm" animated={false} />
-                      )}
-                    </div>
-                    <div className="flex-1 space-y-1 sm:space-y-3 min-w-0">
-                      <div className="text-xs sm:text-sm font-medium text-slate-400">
-                        {message.sender === "user" ? "Você" : "Cysec"}
-                      </div>
-                      <div className="text-slate-100 leading-relaxed text-sm sm:text-base break-words">
-                        {message.sender === "bot" ? (
-                          <ReactMarkdown className="prose prose-invert prose-sm sm:prose-base max-w-none">
-                            {message.content}
-                          </ReactMarkdown>
-                        ) : (
-                          <div className="whitespace-pre-wrap">{message.content}</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {isLoading && (
-                  <div className="flex gap-2 sm:gap-6 max-w-4xl mx-auto">
-                    <div className="flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-slate-700/50 backdrop-blur-sm">
-                      <CysecRobot size="sm" animated={true} />
-                    </div>
-                    <div className="flex-1 space-y-1 sm:space-y-3">
-                      <div className="text-xs sm:text-sm font-medium text-slate-400">Cysec</div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" />
-                        <div
-                          className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"
-                          style={{ animationDelay: "0.1s" }}
-                        />
-                        <div
-                          className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"
-                          style={{ animationDelay: "0.2s" }}
-                        />
-                      </div>
-                    </div>
+      {/* Messages Area */}
+      <div
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 space-y-4 safe-area-inset-x scrollbar-thin"
+      >
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
+            <CysecRobot size="lg" className="text-primary" />
+            <div className="space-y-2">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">Olá! Sou o assistente Cysec</h2>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Especialista em segurança cibernética. Como posso ajudá-lo hoje?
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {messages.map((message, index) => (
+              <div key={index} className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                {message.role === "assistant" && (
+                  <div className="flex-shrink-0">
+                    <CysecRobot size="sm" animated={loading && index === messages.length - 1} />
                   </div>
                 )}
+
+                <div
+                  className={`message-bubble max-w-[85%] md:max-w-[70%] rounded-lg px-4 py-3 ${
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground ml-auto"
+                      : "bg-card text-card-foreground border border-border"
+                  }`}
+                >
+                  {message.role === "assistant" ? (
+                    <ReactMarkdown className="prose prose-sm max-w-none dark:prose-invert prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-code:text-accent prose-pre:bg-muted prose-pre:text-muted-foreground">
+                      {message.content}
+                    </ReactMarkdown>
+                  ) : (
+                    <p className="whitespace-pre-wrap">{message.content}</p>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className="flex gap-3 justify-start">
+                <div className="flex-shrink-0">
+                  <CysecRobot size="sm" animated={true} />
+                </div>
+                <div className="bg-card text-card-foreground border border-border rounded-lg px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                      <div
+                        className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-2 h-2 bg-primary rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                    <span className="text-sm text-muted-foreground">Pensando...</span>
+                  </div>
+                </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
-          </div>
-        </div>
+          </>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
 
-        {/* Input Area */}
-        <div className="flex-shrink-0 p-3 sm:p-4 lg:pb-6 bg-gradient-to-t from-slate-900/50 to-transparent">
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-slate-800/50 rounded-2xl sm:rounded-3xl border border-slate-700/50 shadow-2xl backdrop-blur-sm">
-              <Input
-                ref={inputRef}
-                placeholder="Pergunte alguma coisa..."
+      {/* Input Area */}
+      <div className="border-t border-border bg-card/50 backdrop-blur-sm safe-area-inset-bottom">
+        <div className="p-4 safe-area-inset-x">
+          <div className="flex gap-3 items-end">
+            <div className="flex-1">
+              <textarea
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                disabled={isLoading}
-                className="bg-transparent border-0 text-white placeholder-slate-400 text-sm sm:text-base py-3 sm:py-6 px-3 sm:px-6 pr-20 sm:pr-32 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-2xl sm:rounded-3xl resize-none"
+                placeholder="Digite sua pergunta sobre segurança cibernética..."
+                className="input-glow w-full px-4 py-3 bg-input border border-border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-ring text-foreground placeholder:text-muted-foreground min-h-[44px] max-h-32 transition-all duration-300"
+                rows={1}
+                style={{
+                  height: "auto",
+                  minHeight: "44px",
+                }}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement
+                  target.style.height = "auto"
+                  target.style.height = Math.min(target.scrollHeight, 128) + "px"
+                }}
               />
-
-              <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-slate-400 hover:text-white hover:bg-slate-700/50 h-7 w-7 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl transition-all duration-200 hidden sm:flex"
-                >
-                  <Paperclip className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-slate-400 hover:text-white hover:bg-slate-700/50 h-7 w-7 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl transition-all duration-200 hidden lg:flex"
-                >
-                  <Mic className="w-4 h-4" />
-                </Button>
-                <Button
-                  onClick={sendMessage}
-                  disabled={isLoading || !inputMessage.trim()}
-                  size="icon"
-                  className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 h-8 w-8 sm:h-10 sm:w-10 disabled:bg-slate-600 disabled:text-slate-400 rounded-lg sm:rounded-xl transition-all duration-200 shadow-lg"
-                >
-                  <Send className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-              </div>
             </div>
+            <button
+              onClick={sendMessage}
+              disabled={loading || !inputMessage.trim()}
+              className="px-6 py-3 bg-primary text-primary-foreground rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors touch-feedback min-h-[44px] min-w-[44px]"
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </div>
