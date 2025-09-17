@@ -4,76 +4,76 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated color palette for cybersecurity theme */
-  --background: oklch(1 0 0); /* White background */
-  --foreground: oklch(0.35 0 0); /* Slate gray text */
-  --card: oklch(0.98 0.02 195); /* Light cyan card background */
-  --card-foreground: oklch(0.25 0.08 195); /* Cyan-800 text on cards */
-  --popover: oklch(1 0 0); /* White popover background */
-  --popover-foreground: oklch(0.35 0 0); /* Slate gray popover text */
-  --primary: oklch(0.25 0.08 195); /* Cyan-800 primary color */
-  --primary-foreground: oklch(1 0 0); /* White text on primary */
-  --secondary: oklch(0.35 0.12 142); /* Green-700 secondary color */
-  --secondary-foreground: oklch(1 0 0); /* White text on secondary */
-  --muted: oklch(0.98 0.01 142); /* Light green muted background */
-  --muted-foreground: oklch(0.4 0 0); /* Dark gray muted text */
-  --accent: oklch(0.35 0.12 142); /* Green-700 accent color */
-  --accent-foreground: oklch(1 0 0); /* White text on accent */
-  --destructive: oklch(0.55 0.25 12); /* Red for errors */
-  --destructive-foreground: oklch(1 0 0); /* White text on destructive */
-  --border: oklch(0.35 0 0); /* Slate gray borders */
-  --input: oklch(0.98 0.02 195); /* Light cyan input background */
-  --ring: oklch(0.25 0.08 195 / 0.5); /* Cyan-800 focus ring */
+  /* Aplicando paleta de cores minimalista e profissional inspirada no design brief */
+  --background: #ffffff;
+  --foreground: #374151;
+  --card: #fefce8;
+  --card-foreground: #374151;
+  --popover: #ffffff;
+  --popover-foreground: #374151;
+  --primary: #d97706;
+  --primary-foreground: #ffffff;
+  --secondary: #f59e0b;
+  --secondary-foreground: #ffffff;
+  --muted: #fefce8;
+  --muted-foreground: #6b7280;
+  --accent: #f59e0b;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #fefce8;
+  --ring: #d97706;
   --chart-1: oklch(0.6 0.15 120);
   --chart-2: oklch(0.7 0.15 60);
   --chart-3: oklch(0.6 0.2 350);
   --chart-4: oklch(0.6 0.15 240);
   --chart-5: oklch(0.55 0.2 280);
-  --radius: 0.5rem;
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.35 0 0);
-  --sidebar-primary: oklch(0.25 0.08 195);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.35 0.12 142);
-  --sidebar-accent-foreground: oklch(1 0 0);
-  --sidebar-border: oklch(0.98 0.02 195);
-  --sidebar-ring: oklch(0.25 0.08 195 / 0.5);
+  --radius: 0.75rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #374151;
+  --sidebar-primary: #d97706;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f59e0b;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #d97706;
 }
 
 .dark {
-  /* Updated dark mode colors for cybersecurity theme */
-  --background: oklch(0.08 0 0); /* Very dark background */
-  --foreground: oklch(0.95 0 0); /* Light text */
-  --card: oklch(0.12 0.02 195); /* Dark cyan card background */
-  --card-foreground: oklch(0.9 0.05 195); /* Light cyan text on cards */
-  --popover: oklch(0.08 0 0); /* Dark popover background */
-  --popover-foreground: oklch(0.95 0 0); /* Light popover text */
-  --primary: oklch(0.4 0.15 195); /* Brighter cyan primary for dark mode */
-  --primary-foreground: oklch(0.08 0 0); /* Dark text on primary */
-  --secondary: oklch(0.45 0.18 142); /* Brighter green secondary for dark mode */
-  --secondary-foreground: oklch(0.08 0 0); /* Dark text on secondary */
-  --muted: oklch(0.15 0.02 142); /* Dark green muted background */
-  --muted-foreground: oklch(0.7 0 0); /* Light gray muted text */
-  --accent: oklch(0.45 0.18 142); /* Brighter green accent for dark mode */
-  --accent-foreground: oklch(0.08 0 0); /* Dark text on accent */
-  --destructive: oklch(0.5 0.22 12); /* Adjusted red for dark mode */
-  --destructive-foreground: oklch(0.95 0 0); /* Light text on destructive */
-  --border: oklch(0.2 0 0); /* Dark gray borders */
-  --input: oklch(0.12 0.02 195); /* Dark cyan input background */
-  --ring: oklch(0.4 0.15 195 / 0.5); /* Brighter cyan focus ring */
+  /* Cores para modo escuro mantendo a elegância e profissionalismo */
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card: #1e293b;
+  --card-foreground: #f1f5f9;
+  --popover: #0f172a;
+  --popover-foreground: #f1f5f9;
+  --primary: #f59e0b;
+  --primary-foreground: #0f172a;
+  --secondary: #d97706;
+  --secondary-foreground: #0f172a;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #f59e0b;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #f1f5f9;
+  --border: #334155;
+  --input: #1e293b;
+  --ring: #f59e0b;
   --chart-1: oklch(0.65 0.18 120);
   --chart-2: oklch(0.75 0.18 60);
   --chart-3: oklch(0.65 0.22 350);
   --chart-4: oklch(0.65 0.18 240);
   --chart-5: oklch(0.6 0.22 280);
-  --sidebar: oklch(0.1 0 0);
-  --sidebar-foreground: oklch(0.95 0 0);
-  --sidebar-primary: oklch(0.4 0.15 195);
-  --sidebar-primary-foreground: oklch(0.08 0 0);
-  --sidebar-accent: oklch(0.45 0.18 142);
-  --sidebar-accent-foreground: oklch(0.08 0 0);
-  --sidebar-border: oklch(0.15 0.02 195);
-  --sidebar-ring: oklch(0.4 0.15 195 / 0.5);
+  --sidebar: #0f172a;
+  --sidebar-foreground: #f1f5f9;
+  --sidebar-primary: #f59e0b;
+  --sidebar-primary-foreground: #0f172a;
+  --sidebar-accent: #d97706;
+  --sidebar-accent-foreground: #0f172a;
+  --sidebar-border: #334155;
+  --sidebar-ring: #f59e0b;
 }
 
 @theme inline {
@@ -120,156 +120,60 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Adicione essas regras ao seu globals.css */
+/* Melhorias visuais minimalistas e profissionais */
 
-/* Melhorias para mobile */
-@media (max-width: 640px) {
-  /* Viewport adjustments for mobile */
-  html {
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-  }
-
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overscroll-behavior: none;
-  }
-
-  /* Fix para evitar zoom em inputs no iOS */
-  input,
-  textarea,
-  select {
-    font-size: 16px !important;
-  }
-
-  /* Scrollbar customizada para mobile */
-  .scrollbar-thin {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: var(--muted);
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 3px;
-  }
-
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-  }
-
-  /* Ajustes para teclado virtual no mobile */
-  .mobile-keyboard-adjust {
-    min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height */
-  }
-
-  /* Melhoria nos toques */
-  button,
-  [role="button"] {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
+/* Scrollbar personalizada minimalista */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
-/* Tablet adjustments */
-@media (min-width: 641px) and (max-width: 1024px) {
-  /* Ajustes específicos para tablet */
-  .tablet-spacing {
-    padding: 1.5rem;
-  }
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Touch improvements */
-@media (hover: none) and (pointer: coarse) {
-  /* Dispositivos touch */
-  button {
-    min-height: 44px; /* iOS recommended touch target */
-    min-width: 44px;
-  }
-
-  /* Feedback visual melhorado para touch */
-  .touch-feedback:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease-in-out;
-  }
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-/* Safe area adjustments for notched devices */
-@supports (padding: max(0px)) {
-  .safe-area-inset-top {
-    padding-top: max(env(safe-area-inset-top), 1rem);
-  }
-
-  .safe-area-inset-bottom {
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-  }
-
-  .safe-area-inset-x {
-    padding-left: max(env(safe-area-inset-left), 0.75rem);
-    padding-right: max(env(safe-area-inset-right), 0.75rem);
-  }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }
 
-/* Animation improvements for mobile */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }
 
-/* Focus improvements */
-@media (max-width: 640px) {
-  *:focus-visible {
-    outline: 2px solid oklch(0.4 0.15 195);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
+/* Efeito de glow sutil no input */
+.input-glow:focus {
+  box-shadow: 0 0 0 3px var(--ring), 0 0 20px rgba(217, 119, 6, 0.1);
 }
 
-/* High contrast support */
-@media (prefers-contrast: high) {
-  .dark {
-    --background: oklch(0 0 0);
-    --foreground: oklch(1 0 0);
-    --border: oklch(0.5 0 0);
-  }
+.dark .input-glow:focus {
+  box-shadow: 0 0 0 3px var(--ring), 0 0 20px rgba(245, 158, 11, 0.2);
 }
 
-/* Landscape phone adjustments */
-@media (max-width: 896px) and (orientation: landscape) {
-  .landscape-adjust {
-    height: 100vh;
-    height: 100dvh;
-  }
-
-  /* Reduce header size in landscape */
-  .landscape-header {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-  }
+/* Melhorias nas mensagens */
+.message-bubble {
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border);
 }
 
-/* Melhorando o botão de toggle de tema */
+.dark .message-bubble {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Botão de toggle tema elegante */
 .theme-toggle {
   position: relative;
   overflow: hidden;
@@ -291,17 +195,76 @@
   opacity: 0.1;
 }
 
-/* Melhorando o visual das mensagens */
-.message-bubble {
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+/* Feedback tátil para dispositivos touch */
+.touch-feedback:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-in-out;
 }
 
-.dark .message-bubble {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+/* Melhorias para mobile */
+@media (max-width: 640px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior: none;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+
+  button,
+  [role="button"] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
-/* Melhorando o input com glow effect */
-.input-glow:focus {
-  box-shadow: 0 0 0 3px var(--ring), 0 0 20px var(--primary);
+/* Safe area para dispositivos com notch */
+@supports (padding: max(0px)) {
+  .safe-area-inset-top {
+    padding-top: max(env(safe-area-inset-top), 1rem);
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+  }
+
+  .safe-area-inset-x {
+    padding-left: max(env(safe-area-inset-left), 1rem);
+    padding-right: max(env(safe-area-inset-right), 1rem);
+  }
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Alto contraste */
+@media (prefers-contrast: high) {
+  .dark {
+    --background: #000000;
+    --foreground: #ffffff;
+    --border: #666666;
+  }
 }
