@@ -4,8 +4,8 @@ export async function POST(req: Request) {
   try {
     const { message, situation } = await req.json()
 
-    const apiKey = "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"
-    const model = "openai/gpt-oss-20b:free" // modelo confiável como fallback
+    const apiKey = process.env.OPENROUTER_API_KEY
+    const model = "openai/gpt-oss-120b:free"
 
     if (!apiKey) {
       return NextResponse.json({ error: "API key não configurada" }, { status: 400 })
@@ -25,7 +25,7 @@ Sempre forneça respostas práticas, claras e baseadas nas melhores práticas de
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model,
@@ -41,6 +41,16 @@ Sempre forneça respostas práticas, claras e baseadas nas melhores práticas de
     if (!openrouterResp.ok) {
       const errorText = await openrouterResp.text()
       console.error("Erro da API OpenRouter:", errorText)
+
+      if (openrouterResp.status === 401) {
+        return NextResponse.json(
+          {
+            error: "Erro de autenticação. A API key pode estar inválida ou expirada.",
+          },
+          { status: 401 },
+        )
+      }
+
       return NextResponse.json({ error: errorText }, { status: openrouterResp.status })
     }
 
@@ -54,9 +64,6 @@ Sempre forneça respostas práticas, claras e baseadas nas melhores práticas de
     })
   } catch (err: any) {
     console.error("Erro no servidor:", err)
-    return NextResponse.json(
-      { error: `Erro interno: ${err.message}` },
-      { status: 500 },
-    )
+    return NextResponse.json({ error: `Erro interno: ${err.message}` }, { status: 500 })
   }
 }
