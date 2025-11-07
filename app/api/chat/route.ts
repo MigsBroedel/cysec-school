@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     const { message, situation } = await req.json()
 
     const apiKey = process.env.OPENROUTER_API_KEY
-    const model = "deepseek/deepseek-chat-v3.1:free"
+    const model = "openrouter/polaris-alpha"
 
     if (!apiKey) {
       return NextResponse.json({ error: "API key não configurada" }, { status: 400 })
