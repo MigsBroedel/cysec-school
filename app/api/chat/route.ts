@@ -19,7 +19,7 @@ Suas especialidades incluem:
 - Compliance e regulamentações
 - Resposta a incidentes
 - Educação em segurança
-Sempre forneça respostas práticas, claras e baseadas nas melhores práticas de segurança.`
+Sempre forneça respostas práticas, claras e baseadas nas melhores práticas de segurança. Se a o prompt do usuario não tiver relação com segurança ou situação digital, contornar e voltar pro foco de forma respeitosa`
 
     const openrouterResp = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
